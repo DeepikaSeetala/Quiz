@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f8ff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.quiz-container {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+button {
+  background-color: #1e90ff;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #4682b4;
+}
+
+#feedback {
+  margin-top: 20px;
+  font-size: 1.2em;
+}
+
+#next-btn {
+  background-color: #32cd32;
+  margin-top: 20px;
+}
+
+    <div class="quiz-container">
+        <h1>Quiz </h1>
+        <div id="question-container">
+            <h2 id="question">Question Text</h2>
+            <div id="choices-container">
+                <button class="choice" onclick="selectAnswer(0)">Choice 1</button>
+                <button class="choice" onclick="selectAnswer(1)">Choice 2</button>
+                <button class="choice" onclick="selectAnswer(2)">Choice 3</button>
+                <button class="choice" onclick="selectAnswer(3)">Choice 4</button>
+            </div>
+        </div>
+        <div id="feedback"></div>
+        <button id="next-btn" onclick="nextQuestion()" style="display:none;">Next Question</button>
+    </div>
+
+    <script src="script.js"></script>
+const questions = [
+  {
+    question: "What is the capital of France?",
+    choices: ["Berlin", "Madrid", "Paris", "Lisbon"],
+    correctAnswer: 2
+  },
+  {
+    question: "Which planet is known as the Red Planet?",
+    choices: ["Earth", "Mars", "Jupiter", "Saturn"],
+    correctAnswer: 1
+  },
+  {
+    question: "Who wrote 'To Kill a Mockingbird'?",
+    choices: ["Harper Lee", "Mark Twain", "Ernest Hemingway", "Jane Austen"],
+    correctAnswer: 0
+  },
+  {
+    question: "What is the largest ocean on Earth?",
+    choices: ["Atlantic Ocean", "Indian Ocean", "Pacific Ocean", "Arctic Ocean"],
+    correctAnswer: 2
+  },
+  {
+    question: "Which country won the FIFA World Cup in 2018?",
+    choices: ["Germany", "Brazil", "France", "Argentina"],
+    correctAnswer: 2
+  }
+];
+
+let currentQuestionIndex = 0;
+let score = 0;
+
+function displayQuestion() {
+  const questionElement = document.getElementById("question");
+  const choicesContainer = document.getElementById("choices-container");
+  const feedbackElement = document.getElementById("feedback");
+  const nextButton = document.getElementById("next-btn");
+
+  feedbackElement.innerHTML = ""; // Clear feedback
+  nextButton.style.display = "none"; // Hide next button
+
+  const currentQuestion = questions[currentQuestionIndex];
+  questionElement.textContent = currentQuestion.question;
+
+  const choicesButtons = choicesContainer.getElementsByClassName("choice");
+  for (let i = 0; i < choicesButtons.length; i++) {
+    choicesButtons[i].textContent = currentQuestion.choices[i];
+    choicesButtons[i].disabled = false; // Enable buttons
+    choicesButtons[i].style.backgroundColor = ""; // Reset background color
+  }
+}
+
+function selectAnswer(choiceIndex) {
+  const currentQuestion = questions[currentQuestionIndex];
+  const feedbackElement = document.getElementById("feedback");
+  const nextButton = document.getElementById("next-btn");
+
+  const choicesButtons = document.getElementsByClassName("choice");
+  for (let i = 0; i < choicesButtons.length; i++) {
+    choicesButtons[i].disabled = true; // Disable all buttons after selection
+  }
+
+  if (choiceIndex === currentQuestion.correctAnswer) {
+    feedbackElement.innerHTML = "Correct! The answer is " + currentQuestion.choices[currentQuestion.correctAnswer] + ".";
+    feedbackElement.style.color = "green";
+    score++;
+  } else {
+    feedbackElement.innerHTML = "Wrong! The correct answer is " + currentQuestion.choices[currentQuestion.correctAnswer] + ".";
+    feedbackElement.style.color = "red";
+  }
+
+  nextButton.style.display = "block"; // Show the next button
+}
+
+function nextQuestion() {
+  currentQuestionIndex++;
+  if (currentQuestionIndex < questions.length) {
+    displayQuestion();
+  } else {
+    displayResult();
+  }
+}
+
+function displayResult() {
+  const questionContainer = document.getElementById("question-container");
+  const feedbackElement = document.getElementById("feedback");
+  const nextButton = document.getElementById("next-btn");
+
+  questionContainer.innerHTML = "<h2>Quiz Over!</h2>";
+  feedbackElement.innerHTML = "Your final score is: " + score + " out of " + questions.length;
+
+  if (score >= 4) {
+    feedbackElement.innerHTML += "<br>Congratulations! You did great!";
+  } else {
+    feedbackElement.innerHTML += "<br>Better luck next time!";
+  }
+
+  nextButton.style.display = "none";
+}
+
+// Initialize the quiz
+displayQuestion();
+
+</body>
+</html>
